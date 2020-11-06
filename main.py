@@ -7,8 +7,10 @@ import time
 import numpy as np
 import scipy as sc
 import matplotlib.pyplot as plt
-from IPython.display import clear_output
 from sklearn.datasets import make_circles   # Dataset
+
+from util import get_csv, write_csv
+
 
 # Neural layers
 from neural_layer import Neural_Layer
@@ -130,60 +132,29 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
                     0, deltas[0] @ _weights.T * neural_network[i].activation_f(a, derivate=True))
 
             _weights = neural_network[i].weights
+
             # Steepest descent
             neural_network[i].bias = neural_network[i].bias - \
                 (np.mean(deltas[0], axis=0, keepdims=True) * lr)
             neural_network[i].weights = neural_network[i].weights - \
                 output[i][1].T @ deltas[0] * lr
+
     return output[-1][1]
 
 
-if __name__ == "__main__":
-    # Create dataset
-    # n   stands for number of samples to train with
-    # p   number of inputs per sample, characteristics of every sample
-    n = 500
-    p = 2
-
-    '''
-    make_circles
-        n_samples : int or two-element tuple, optional (default=100)
-            If int, it is the total number of points generated. 
-            For odd numbers, the inner circle will have one point more than the outer circle. 
-            If two-element tuple, number of points in outer circle and inner circle.
-
-        noise : double or None (default=None)
-            Standard deviation of Gaussian noise added to the data.
-
-        factor : 0 < double < 1 (default=.8)
-            Scale factor between inner and outer circle.    
-    '''
-    # Samples it's a matrix that gets inputs per sample
-    # Desired it's a vector that stores clasification per sample
-    samples, desired = make_circles(n_samples=n, factor=0.45, noise=0.05)
-    desired = desired[:, np.newaxis]
-
-    '''
-    topology        Stores number of neurons per layer in neural network
-                    Final is 1 because classification is binary, based in 0 or 1
-    '''
-    topology = [p, 4, 8, 1]
-    neural_network = create_nn(topology, sigm)
-    loss = []
-
-    for i in range(2500):
+def run(epochs):
+    for i in range(epochs):
         # Training
         pY = train(neural_network, samples, desired, lms_cost)
-
-        if i % 10 == 0:
-            print(pY)
+        if i % 25 == 0:
+            # Outout prediction every 25 epochs
+            print(f"Output prediction: {pY.T}")
 
             loss.append(lms_cost(pY, desired))
+            res = 75
 
-            res = 50
-
-            _x0 = np.linspace(-1.5, 1.5, res)
-            _x1 = np.linspace(-1.5, 1.5, res)
+            _x0 = np.linspace(samples.min()-1, samples.max()+1, res)
+            _x1 = np.linspace(samples.min()-1, samples.max()+1, res)
 
             _Y = np.zeros((res, res))
 
@@ -192,21 +163,99 @@ if __name__ == "__main__":
                     _Y[i0, i1] = train(neural_network, np.array(
                         [[x0, x1]]), desired, lms_cost, train=False)[0][0]
 
-            plt.pcolormesh(_x0, _x1, _Y, cmap="coolwarm")
-            plt.axis("equal")
+            plt.pcolormesh(_x0, _x1, _Y, cmap="PRGn")
+            # plt.axis("equal")
 
             # Samples in first class, in this case class  '0'`
             plt.scatter(samples[desired[:, 0] == 0, 0],
-                        samples[desired[:, 0] == 0, 1], color="skyblue")
+                        samples[desired[:, 0] == 0, 1], color="violet")
 
             # Samples in first class, in this case class  '1'
             plt.scatter(samples[desired[:, 0] == 1, 0],
-                        samples[desired[:, 0] == 1, 1], color="red")
+                        samples[desired[:, 0] == 1, 1], color="green")
 
-            clear_output(wait=True)
-            plt.show()
-            plt.pause(0.01)
+            print(f"Epochs: {i}")            
             plt.ion()
-            # plt.plot(range(len(loss)), loss)
-            # plt.show()
-            # time.sleep(0.2)
+            plt.show()
+            plt.pause(0.5)
+
+    return pY;
+    # plt.clf()
+    # plt.plot(range(len(loss)), loss)
+    # plt.show()
+
+
+if __name__ == "__main__":
+    option = 3
+    while option != 0:
+        print("MENU")
+        print("1.- Select an samples file")
+        print("2.- Select desired file")
+        print("3.- Train")
+        print("4.- Save outputs(y)")
+        print("5.- SK-Circles")
+        print("0.- Exit")
+        option = int(input(">>> "))
+        if option == 1:
+            samples = get_csv()
+            print(f"Training inputs:\n{samples}")
+            # Create dataset
+            # n   stands for number of samples to train with
+            # p   number of inputs per sample, characteristics of every sample
+            n = len(samples)
+            p = len(samples[0])
+
+        elif option == 2:
+            desired = get_csv()
+            # Samples in first class, in this case class  '0'`
+            plt.scatter(samples[desired[:, 0] == 0, 0],
+                        samples[desired[:, 0] == 0, 1], color="violet")
+
+            # Samples in first class, in this case class  '1'
+            plt.scatter(samples[desired[:, 0] == 1, 0],
+                        samples[desired[:, 0] == 1, 1], color="green")
+            plt.show()
+
+        elif option == 3:
+            '''
+            topology        Stores number of neurons per layer in neural network
+                            Final is desired len depends on classification, if binary is just 1
+            neural_network  Stores all layers based in topology
+                            sends activation function of network
+            loss            Vector of losses per epochs
+            '''
+            topology = [p, 5, 5, len(desired[0])]
+            neural_network = create_nn(topology, sigm)
+            loss = []
+            epochs = int(input("Epochs >>> "))
+
+            out = run(epochs)
+            print(f"Final prediction: \n{out}")
+
+        elif option == 4:
+            write_csv(out.T)
+
+        elif option == 5:
+            n = 500
+            p = 2
+            '''
+            make_circles
+                n_samples : int or two-element tuple, optional (default=100)
+                    If int, it is the total number of points generated. 
+                    For odd numbers, the inner circle will have one point more than the outer circle. 
+                    If two-element tuple, number of points in outer circle and inner circle.
+
+                noise : double or None (default=None)
+                    Standard deviation of Gaussian noise added to the data.
+
+                factor : 0 < double < 1 (default=.8)
+                    Scale factor between inner and outer circle.    
+            '''
+            # Samples it's a matrix that gets inputs per sample
+            # Desired it's a vector that stores clasification per sample
+            samples, desired = make_circles(
+                n_samples=n, factor=0.45, noise=0.05)
+            desired = desired[:, np.newaxis]
+        else:
+            print("Bye bitch")
+            break
