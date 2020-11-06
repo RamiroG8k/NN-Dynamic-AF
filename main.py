@@ -189,7 +189,7 @@ if __name__ == "__main__":
     option = 3
     while option != 0:
         print("MENU")
-        print("1.- Select an samples file")
+        print("1.- Select samples file")
         print("2.- Select desired file")
         print("3.- Train")
         print("4.- Save outputs(y)")
