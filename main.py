@@ -19,14 +19,8 @@ Anonymous function (commented)
     index 0 actual function
     index 1 derivation function
 '''
-# sigm = (lambda x: 1 / (1 + np.e ** (-x)),
-#         lambda x: x * (1 - x))
-
-
-def sigm(x, derivate=False):
-    u = 1 / (1 + np.e ** (-x))
-    du = x * (1 - x)
-    return du if (derivate == True) else u
+sigm = (lambda x: 1 / (1 + np.e ** (-x)),
+        lambda x: x * (1 - x))
 
 '''
 Anonymous function (commented) 
@@ -39,15 +33,8 @@ Cost Function (anonymous commented)
     Least Mean Square function and derivate
     Returns difference between output and desired 
 '''
-# lms_cost = (lambda output, desired: np.mean((output - desired) ** 2),
-#             lambda output, desired: (output - desired))
-
-
-def lms_cost(output, desired, derivate=False):
-    u = np.mean((output - desired) ** 2)
-    du = np.mean(output - desired)
-    return du if (derivate == True) else u
-
+lms_cost = (lambda output, desired: np.mean((output - desired) ** 2),
+            lambda output, desired: (output - desired))
 
 '''
 Neural Network topology
@@ -97,7 +84,7 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
         # @ it is used to matrix multiplication
         # Gets the value of activation function in last pair of values (output of previous layer)
         z = output[-1][1] @ layer.weights + layer.bias
-        a = layer.activation_f(z)
+        a = layer.activation_f[0](z)
         output.append((z, a))
 
     '''
@@ -121,11 +108,11 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
 
             if i == len(neural_network) - 1:
                 # Calculates last layer delta
-                deltas.insert(0, lms_cost(a, desired, derivate=True)
-                              * neural_network[i].activation_f(a, derivate=True))
+                deltas.insert(0, lms_cost[1](a, desired)
+                              * neural_network[i].activation_f[1](a))
             else:
                 # Calculates delta based in previous layer
-                deltas.insert(0, deltas[0] @ _weights.T * neural_network[i].activation_f(a, derivate=True))
+                deltas.insert(0, deltas[0] @ _weights.T * neural_network[i].activation_f[1](a))
 
             _weights = neural_network[i].weights
             # Steepest descent
@@ -173,7 +160,7 @@ if __name__ == "__main__":
         if i % 10 == 0:
             print(pY)
 
-            loss.append(lms_cost(pY, desired))
+            loss.append(lms_cost[0](pY, desired))
 
             res = 50
 
