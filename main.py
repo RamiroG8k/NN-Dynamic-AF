@@ -177,8 +177,7 @@ def run(epochs):
             print(f"Epochs: {i}")            
             plt.ion()
             plt.show()
-            plt.pause(0.5)
-
+            plt.pause(0.05)
     return pY;
     # plt.clf()
     # plt.plot(range(len(loss)), loss)
@@ -224,7 +223,7 @@ if __name__ == "__main__":
                             sends activation function of network
             loss            Vector of losses per epochs
             '''
-            topology = [p, 5, 5, len(desired[0])]
+            topology = [p, 2, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
             epochs = int(input("Epochs >>> "))
