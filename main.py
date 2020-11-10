@@ -224,7 +224,7 @@ if __name__ == "__main__":
                             sends activation function of network
             loss            Vector of losses per epochs
             '''
-            topology = [p, 2, len(desired[0])]
+            topology = [p, 4, 4, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
             epochs = int(input("Epochs >>> "))
