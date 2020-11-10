@@ -7,6 +7,7 @@ import time
 import numpy as np
 import scipy as sc
 import matplotlib.pyplot as plt
+from clickableInputs import ClickableInputs
 from sklearn.datasets import make_circles   # Dataset
 
 from util import get_csv, write_csv
@@ -175,11 +176,11 @@ def run(epochs):
             plt.scatter(samples[desired[:, 0] == 1, 0],
                         samples[desired[:, 0] == 1, 1], color="green")
 
-            print(f"Epochs: {i}")            
+            print(f"Epochs: {i}")
             plt.ion()
             plt.show()
             plt.pause(0.001)
-    return output_predict;
+    return output_predict
     # plt.clf()
     # plt.plot(range(len(loss)), loss)
     # plt.show()
@@ -189,16 +190,26 @@ if __name__ == "__main__":
     option = 3
     while option != 0:
         print("MENU")
-        print("1.- Select an samples file")
-        print("2.- Select desired file")
-        print("3.- Train")
-        print("4.- Save outputs(y)")
-        print("5.- SK-Circles")
+        print("1.- Get Clicks")
+        print("2.- Train")
+        print("3.- Save outputs(y)")
+        # print("4.- SK-Circles")
         print("0.- Exit")
         option = int(input(">>> "))
         if option == 1:
-            samples = get_csv()
-            print(f"Training inputs:\n{samples}")
+            ci = ClickableInputs()
+            ci.open_clickable_inputs()
+            data = ci.get_data()
+            samples = data.get('inputs')
+            desired = data.get('desired')
+            desired = desired[:, np.newaxis]
+            print('Samples')
+            print(samples)
+            print(f"samples shape {samples.shape}")
+
+            print('Desired')
+            print(desired)
+            print(f"desired shape {desired.shape}")
             # Create dataset
             # n   stands for number of samples to train with
             # p   number of inputs per sample, characteristics of every sample
@@ -206,17 +217,6 @@ if __name__ == "__main__":
             p = len(samples[0])
 
         elif option == 2:
-            desired = get_csv()
-            # Samples in first class, in this case class  '0'`
-            plt.scatter(samples[desired[:, 0] == 0, 0],
-                        samples[desired[:, 0] == 0, 1], color="violet")
-
-            # Samples in first class, in this case class  '1'
-            plt.scatter(samples[desired[:, 0] == 1, 0],
-                        samples[desired[:, 0] == 1, 1], color="green")
-            plt.show()
-
-        elif option == 3:
             '''
             topology        Stores number of neurons per layer in neural network
                             Final is desired len depends on classification, if binary is just 1
@@ -232,10 +232,10 @@ if __name__ == "__main__":
             out = run(epochs)
             print(f"Final prediction: \n{out}")
 
-        elif option == 4:
+        elif option == 3:
             write_csv(out.T)
 
-        elif option == 5:
+        elif option == 4:
             n = 500
             p = 2
             '''
