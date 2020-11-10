@@ -147,7 +147,7 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
 def run(epochs):
     for i in range(epochs):
         # Training
-        output_predict = train(neural_network, samples, desired, lms_cost)
+        output_predict = train(neural_network, samples, desired, lms_cost, lr=0.15)
         if i % 25 == 0:
             # Outout prediction every 25 epochs
             print(f"Output prediction: {output_predict.T}")
@@ -162,8 +162,8 @@ def run(epochs):
 
             for i0, x0 in enumerate(_x0):
                 for i1, x1 in enumerate(_x1):
-                    _Y[i0, i1] = train(neural_network, np.array(
-                        [[x0, x1]]), desired, lms_cost, train=False)[0][0]
+                    _Y[i1, i0] = train(neural_network, np.array(
+                        [[x0, x1]]), desired, lms_cost, lr=0.15, train=False)[0][0]
 
             plt.pcolormesh(_x0, _x1, _Y, cmap="PRGn")
             # plt.axis("equal")
@@ -205,11 +205,9 @@ if __name__ == "__main__":
             desired = desired[:, np.newaxis]
             print('Samples')
             print(samples)
-            print(f"samples shape {samples.shape}")
-
-            print('Desired')
-            print(desired)
-            print(f"desired shape {desired.shape}")
+            
+            print(f"Samples shape {samples.shape}")
+            print(f"Desired shape {desired.shape}")
             # Create dataset
             # n   stands for number of samples to train with
             # p   number of inputs per sample, characteristics of every sample
@@ -224,7 +222,7 @@ if __name__ == "__main__":
                             sends activation function of network
             loss            Vector of losses per epochs
             '''
-            topology = [p, 4, 4, len(desired[0])]
+            topology = [p, 5, 5, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
             epochs = int(input("Epochs >>> "))
@@ -254,7 +252,7 @@ if __name__ == "__main__":
             # Samples it's a matrix that gets inputs per sample
             # Desired it's a vector that stores clasification per sample
             samples, desired = make_circles(
-                n_samples=n, factor=0.45, noise=0.05)
+                n_samples=n, factor=0.15, noise=0.1)
             desired = desired[:, np.newaxis]
         else:
             print("Bye bitch")

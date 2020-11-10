@@ -21,7 +21,7 @@ class ClickableInputs:
                 plt.plot(x, y, 'go')
                 self.__d.append(1)
             # Round precition of axis
-            self.__inputs.append([x, y])
+            self.__inputs.append([round(x,3), round(y,3)])
 
     def open_clickable_inputs(self):
         self.__inputs = []
