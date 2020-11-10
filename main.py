@@ -11,7 +11,6 @@ from sklearn.datasets import make_circles   # Dataset
 
 from util import get_csv, write_csv
 
-
 # Neural layers
 from neural_layer import Neural_Layer
 
@@ -119,6 +118,8 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
         deltas = []
 
         for i in reversed(range(0, len(neural_network))):
+            # z       Stores value of weighted sum
+            # a       Stores value of activation function of z
             z = output[i+1][0]
             a = output[i+1][1]
 
@@ -145,12 +146,12 @@ def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
 def run(epochs):
     for i in range(epochs):
         # Training
-        pY = train(neural_network, samples, desired, lms_cost)
+        output_predict = train(neural_network, samples, desired, lms_cost)
         if i % 25 == 0:
             # Outout prediction every 25 epochs
-            print(f"Output prediction: {pY.T}")
+            print(f"Output prediction: {output_predict.T}")
 
-            loss.append(lms_cost(pY, desired))
+            loss.append(lms_cost(output_predict, desired))
             res = 75
 
             _x0 = np.linspace(samples.min()-1, samples.max()+1, res)
@@ -177,8 +178,8 @@ def run(epochs):
             print(f"Epochs: {i}")            
             plt.ion()
             plt.show()
-            plt.pause(0.05)
-    return pY;
+            plt.pause(0.001)
+    return output_predict;
     # plt.clf()
     # plt.plot(range(len(loss)), loss)
     # plt.show()
