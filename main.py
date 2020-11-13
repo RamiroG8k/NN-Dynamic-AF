@@ -222,7 +222,7 @@ if __name__ == "__main__":
                             sends activation function of network
             loss            Vector of losses per epochs
             '''
-            topology = [p, 5, 5, len(desired[0])]
+            topology = [p, 4, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
             epochs = int(input("Epochs >>> "))
@@ -255,5 +255,5 @@ if __name__ == "__main__":
                 n_samples=n, factor=0.15, noise=0.1)
             desired = desired[:, np.newaxis]
         else:
-            print("Bye bitch")
+            print("Bye")
             break
