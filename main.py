@@ -154,7 +154,7 @@ def run(epochs):
     for i in range(epochs):
         # Training
         output_predict = train(neural_network, samples, desired, lms_cost, lr=0.15)
-        if i % 25 == 0:
+        if i % 100 == 0:
             # Outout prediction every 25 epochs
             print(f"Output prediction: {output_predict.T}")
 
@@ -182,10 +182,10 @@ def run(epochs):
             plt.scatter(samples[desired[:, 0] == 1, 0],
                         samples[desired[:, 0] == 1, 1], color="green")
 
-            print(f"Epochs: {i}")
+            print(f"Epochs: { (i / 20 )}")
             plt.ion()
             plt.show()
-            plt.pause(0.01)
+            plt.pause(0.1)
     return output_predict
     # plt.clf()
     # plt.plot(range(len(loss)), loss)
@@ -231,9 +231,9 @@ if __name__ == "__main__":
             topology = [p, 6, 6, 6, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
-            epochs = int(input("Epochs >>> "))
+            # epochs = int(input("Epochs >>> "))
 
-            out = run(epochs)
+            out = run(3000)
             print(f"Final prediction: \n{out}")
 
         elif option == 3:
