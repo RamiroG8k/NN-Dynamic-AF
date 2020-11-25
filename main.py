@@ -30,6 +30,12 @@ def sigm(x, derivate=False):
     du = x * (1 - x)
     return du if (derivate == True) else u
 
+# TODO
+# Resolve function du
+def tanh(x, derivate = False):
+    u = np.tanh(x)
+    du = (1 - u)
+    return u if (derivate == True) else du
 
 '''
 Anonymous function (commented) 
@@ -179,7 +185,7 @@ def run(epochs):
             print(f"Epochs: {i}")
             plt.ion()
             plt.show()
-            plt.pause(0.001)
+            plt.pause(0.01)
     return output_predict
     # plt.clf()
     # plt.plot(range(len(loss)), loss)
@@ -222,7 +228,7 @@ if __name__ == "__main__":
                             sends activation function of network
             loss            Vector of losses per epochs
             '''
-            topology = [p, 2, len(desired[0])]
+            topology = [p, 6, 6, 6, len(desired[0])]
             neural_network = create_nn(topology, sigm)
             loss = []
             epochs = int(input("Epochs >>> "))
