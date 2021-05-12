@@ -3,11 +3,8 @@ Algorithm: Neural Network with dynamic activation functions
 Date: Thursday November 5th, 2020
 Autor: Ramiro Mendez, based in Carlos Santana Model
 '''
-import time
-import numpy as np
-import scipy as sc
-import matplotlib.pyplot as plt
-from clickableInputs import ClickableInputs
+import numpy as np, matplotlib.pyplot as plt
+from clickable_inputs import ClickableInputs
 from sklearn.datasets import make_circles   # Dataset
 
 from util import get_csv, write_csv

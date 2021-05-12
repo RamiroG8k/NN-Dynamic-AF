@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
 
-
 class ClickableInputs:
     def get_data(self):
         res = {
@@ -11,7 +10,7 @@ class ClickableInputs:
         }
         return res
 
-    def onclick(self, event):
+    def on_click(self, event):
         if event.dblclick:
             x, y = event.xdata, event.ydata
             if event.button == 1:
@@ -20,7 +19,7 @@ class ClickableInputs:
             elif event.button == 3:
                 plt.plot(x, y, 'go')
                 self.__d.append(1)
-            # Round precition of axis
+            # Round prediction of axis
             self.__inputs.append([round(x,3), round(y,3)])
 
     def open_clickable_inputs(self):
@@ -33,6 +32,6 @@ class ClickableInputs:
         # plt.axvline(0, color="red")
         # cursor = Cursor(ax, horizOn=True, vertOn=True, color='white', linewidth=2.0)
         cursor = Cursor(ax, horizOn=False, vertOn=False)
-        fig.canvas.mpl_connect('button_press_event', self.onclick)
+        fig.canvas.mpl_connect('button_press_event', self.on_click)
         plt.grid()
         plt.show()
