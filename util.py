@@ -2,12 +2,21 @@ import csv, pandas as pd, numpy as np
 from tkinter.filedialog import askopenfilename, askdirectory
 from tkinter import Tk
 
+'''
+Get data from a csv file
+    returns a numpy array
+'''
 def get_csv():
     Tk().withdraw()
     file_directory = askopenfilename(title = "Select your csv",  filetypes= (("csv files", "*.csv"),("all files", "*.*")))
     data = pd.read_csv(file_directory, delimiter=',', header=None, dtype={'zero_column_name': object})
     return np.array(data)
 
+
+'''
+Sets data to a csv file
+    returns a file csv type written in local storage
+'''
 def write_csv(data):
     data = np.stack(data).T
     Tk().withdraw()

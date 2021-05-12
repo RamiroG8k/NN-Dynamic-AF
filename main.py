@@ -5,49 +5,10 @@ Autor: Ramiro Mendez, based in Carlos Santana Model
 '''
 import numpy as np, matplotlib.pyplot as plt
 from clickable_inputs import ClickableInputs
-from sklearn.datasets import make_circles   # Dataset
 
 from util import get_csv, write_csv
-
-# Neural layers
 from neural_layer import Neural_Layer
-
-'''
-Anonymous function (commented) 
-    Sigmoid activation function and derivate
-    index 0 actual function
-    index 1 derivation function
-'''
-# sigm = (lambda x: 1 / (1 + np.e ** (-x)),
-#         lambda x: x * (1 - x))
-
-
-def sigm(x, derivate=False):
-    u = 1 / (1 + np.e ** (-x))
-    du = x * (1 - x)
-    return du if (derivate == True) else u
-
-
-'''
-Anonymous function (commented) 
-    Relu activation function and derivate
-'''
-# relu = lambda x: np.maximum(0,x)
-
-'''
-Cost Function (anonymous commented) 
-    Least Mean Square function and derivate
-    Returns difference between output and desired 
-'''
-# lms_cost = (lambda output, desired: np.mean((output - desired) ** 2),
-#             lambda output, desired: (output - desired))
-
-
-def lms_cost(output, desired, derivate=False):
-    u = np.mean((output - desired) ** 2)
-    du = (output - desired)
-    return du if (derivate == True) else u
-
+from activation import lms_cost, sigm
 
 '''
 Neural Network topology
@@ -58,8 +19,6 @@ Neural Network topology
     For item in array 'topology' creates actual layer 
     Instantiates 'n' inputs to the next one and 'act_f' per layer
 '''
-
-
 def create_nn(topology, act_f):
     nn = []
     for i, connections in enumerate(topology[:-1]):
@@ -76,8 +35,6 @@ Training
     lr              Learning Rate
     train           Specifies if Executes training(True) or just prediction(False)
 '''
-
-
 def train(neural_network, samples, desired, lms_cost, lr=0.05, train=True):
     '''
     Forward pass -> 
@@ -147,7 +104,7 @@ def run(epochs):
         output_predict = train(neural_network, samples, desired, lms_cost, lr=0.15)
         if i % 25 == 0:
             # Outout prediction every 25 epochs
-            print(f"Output prediction: {output_predict.T}")
+            # print(f"Output prediction: {output_predict.T}")
 
             loss.append(lms_cost(output_predict, desired))
             res = 75
@@ -162,7 +119,7 @@ def run(epochs):
                     _Y[i1, i0] = train(neural_network, np.array(
                         [[x0, x1]]), desired, lms_cost, lr=0.15, train=False)[0][0]
 
-            plt.pcolormesh(_x0, _x1, _Y, cmap="PRGn")
+            plt.pcolormesh(_x0, _x1, _Y, cmap="PRGn", shading="auto")
             # plt.axis("equal")
 
             # Samples in first class, in this case class  '0'`
@@ -178,10 +135,6 @@ def run(epochs):
             plt.show()
             plt.pause(0.001)
     return output_predict
-    # plt.clf()
-    # plt.plot(range(len(loss)), loss)
-    # plt.show()
-
 
 if __name__ == "__main__":
     option = 3
